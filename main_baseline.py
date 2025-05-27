@@ -9,6 +9,8 @@ if __name__ == "__main__":
     parsers.add_argument('--num_heads', type=int, default=4)
     parsers.add_argument('--root_dir', type=str, default='./../')
     
+    parsers.add_argument('--use_kaiming_init', type=bool, default=True)
+    
     parsers.add_argument('--batch_size', type=int, default=16)
     parsers.add_argument('--test_batch_size', type=int, default=1)
     parsers.add_argument('--step_size', type=int, default=100)
