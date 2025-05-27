@@ -10,10 +10,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 class InceptionV3(nn.Module):
     def __init__(self, args):
         super(InceptionV3, self).__init__()
-        if args.load_pretrained==False:
-            backbone = models.inception_v3(weights=Inception_V3_Weights.DEFAULT)
-        else:
-            backbone = models.inception_v3()
+        backbone = models.inception_v3(weights=Inception_V3_Weights.DEFAULT)
         # backbone = models.inception_v3()
         
         ## Extract Inception Layers ##
