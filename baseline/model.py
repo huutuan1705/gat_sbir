@@ -52,4 +52,15 @@ class Basline(nn.Module):
         sketch_feature = self.sketch_linear(sketch_feature)
         
         return sketch_feature, positive_feature, negative_feature
+    
+    def test_forward(self, batch):
+        sketch_feature = self.sketch_embedding_network(batch['sketch_img'].to(device))
+        positive_feature = self.sample_embedding_network(batch['positive_img'].to(device))
         
+        positive_feature = self.attention(positive_feature)
+        sketch_feature = self.sketch_attention(sketch_feature)
+        
+        positive_feature = self.linear(positive_feature)
+        sketch_feature = self.sketch_linear(sketch_feature)
+            
+        return sketch_feature, positive_feature
