@@ -15,13 +15,13 @@ class Basline(nn.Module):
     def __init__(self, args):
         super(Basline, self).__init__()
         self.args = args
-        self.sample_embedding_network = InceptionV3(args=args)
-        self.attention = SelfAttention(args)
-        self.linear = Linear_global(feature_num=self.args.output_size)
+        self.sample_embedding_network = InceptionV3(args=args).to(device)
+        self.attention = SelfAttention(args).to(device)
+        self.linear = Linear_global(feature_num=self.args.output_size).to(device)
         
-        self.sketch_embedding_network = InceptionV3(args=args)
-        self.sketch_attention = SelfAttention(args)
-        self.sketch_linear = Linear_global(feature_num=self.args.output_size)
+        self.sketch_embedding_network = InceptionV3(args=args).to(device)
+        self.sketch_attention = SelfAttention(args).to(device)
+        self.sketch_linear = Linear_global(feature_num=self.args.output_size).to(device)
     
         def init_weights(m):
             if type(m) == nn.Linear or type(m) == nn.Conv2d:
