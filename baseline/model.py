@@ -1,10 +1,6 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import numpy as np
-
-from torch import optim
-from tqdm import tqdm
 
 from baseline.backbones import InceptionV3
 from baseline.attention import Linear_global, SelfAttention

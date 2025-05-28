@@ -6,7 +6,7 @@ if __name__ == "__main__":
     parsers = argparse.ArgumentParser(description='Baseline Fine-Grained SBIR model')
     parsers.add_argument('--dataset_name', type=str, default='ShoeV2')
     parsers.add_argument('--output_size', type=int, default=64)
-    parsers.add_argument('--num_heads', type=int, default=4)
+    parsers.add_argument('--num_heads', type=int, default=8)
     parsers.add_argument('--root_dir', type=str, default='./../')
     
     parsers.add_argument('--use_kaiming_init', type=bool, default=True)
