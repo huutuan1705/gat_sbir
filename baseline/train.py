@@ -27,7 +27,7 @@ def evaluate_model(model, dataloader_test):
         Image_Name = []
         Sketch_Feature_ALL = []
         Sketch_Name = []
-        for _, sampled_batch in enumerate(tqdm(dataloader_test, ncols=20)):
+        for _, sampled_batch in enumerate(tqdm(dataloader_test, ncols=500)):
             sketch_feature, positive_feature= model.test_forward(sampled_batch)
             Sketch_Feature_ALL.extend(sketch_feature)
             Sketch_Name.extend(sampled_batch['sketch_path'])
@@ -80,7 +80,7 @@ def train_model(model, args):
         print(f"Epoch: {i_epoch+1} / {args.epochs}")
         
         losses = []
-        for _, batch_data in enumerate(tqdm(dataloader_train, ncols=20)):
+        for _, batch_data in enumerate(tqdm(dataloader_train, ncols=500)):
             model.train()
             optimizer.zero_grad()
             
