@@ -69,11 +69,11 @@ def train_model(model, args):
     dataloader_train, dataloader_test = get_dataloader(args)
     
     loss_fn = nn.TripletMarginLoss(margin=args.margin)
-    optimizer = optim.AdamW([
+    optimizer = optim.Adam([
             {'params': model.sample_embedding_network.parameters(), 'lr': args.lr},
             {'params': model.sketch_embedding_network.parameters(), 'lr': args.lr},
         ])
-    scheduler = StepLR(optimizer, step_size=200, gamma=0.1)
+    # scheduler = StepLR(optimizer, step_size=200, gamma=0.1)
     
     top1, top5, top10 = 0, 0, 0
     for i_epoch in range(args.epochs):
@@ -88,7 +88,7 @@ def train_model(model, args):
             loss = loss_fn(sketch_feature, positive_feature, negative_feature)
             loss.backward()
             optimizer.step()
-            scheduler.step()
+            # scheduler.step()
             
             losses.append(loss.item())
         

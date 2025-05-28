@@ -20,7 +20,7 @@ class Basline(nn.Module):
         self.sketch_linear = Linear_global(feature_num=self.args.output_size).to(device)
     
         def init_weights(m):
-            if type(m) == nn.Linear or type(m) == nn.Conv2d:
+            if type(m) == nn.Linear or type(m) == nn.Conv2d or type(m) == nn.Parameter:
                 nn.init.kaiming_normal_(m.weight)
                 
         if self.args.use_kaiming_init:
