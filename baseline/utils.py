@@ -10,8 +10,8 @@ def get_transform(type):
         transform_list = [
             transforms.Resize(299),
             transforms.RandomVerticalFlip(0.5),
-            transforms.RandomHorizontalFlip(0.5),
-            transforms.RandomRotation(20),
+            transforms.RandomHorizontalFlip(0.25),
+            transforms.RandomRotation(10),
             transforms.ToTensor(),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ]
