@@ -95,7 +95,7 @@ def train_model(model, args):
         avg_loss = sum(losses) / len(losses)
         top1_eval, top5_eval, top10_eval = evaluate_model(model, dataloader_test)
         
-        if top1_eval > top1:
+        if top5_eval > top5:
             top1, top5, top10 = top1_eval, top5_eval, top10_eval
             torch.save(model.state_dict(), "best_model.pth")
             torch.save(
