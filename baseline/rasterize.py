@@ -28,7 +28,7 @@ def draw_image(vector_image, side=400):
     raster_image = scipy.ndimage.binary_dilation(raster_image) * 255.0
     return raster_image
 
-def draw_image_test(vector_images, side=400, steps=26):
+def draw_image_steps(vector_images, side=400, steps=26):
     for vector_image in vector_images:
         pixel_length = 0
         sample_freq = list(np.round(np.linspace(0,  len(vector_image), steps)[1:]))
@@ -71,7 +71,7 @@ def rasterize_sketch(sketch_points):
     raster_images = draw_image(sketch_points)
     return raster_images
 
-def rasterize_sketch_test(sketch_points, steps=25):
+def rasterize_sketch_steps(sketch_points, steps=25):
     sketch_points = preprocess(sketch_points)
-    raster_images, _ = draw_image_test([sketch_points], steps=steps+1)
+    raster_images, _ = draw_image_steps([sketch_points], steps=steps+1)
     return raster_images
