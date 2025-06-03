@@ -7,11 +7,11 @@ from random import randint
 from PIL import Image
 
 from baseline.utils import get_transform
-from baseline.rasterize import rasterize_sketch_steps
+from baseline.rasterize import rasterize_sketch
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-class FGSBIR_Dataset(Dataset):
+class MIGG_Dataset(Dataset):
     def __init__(self, args, mode):
         self.args = args
         self.mode = mode
@@ -32,7 +32,23 @@ class FGSBIR_Dataset(Dataset):
             return len(self.train_sketch)
 
         return len(self.test_sketch)
-    
+        
+        
     def __getitem__(self, item):
         sample = {}
         
+        if self.mode == 'train':
+            sketch_path = self.train_sketch[item]
+            
+            positive_sample = '_'.join(self.train_sketch[item].split('/')[-1].split('_')[:-1])
+            positive_path = os.path.join(self.root_dir, 'photo', positive_sample + '.png')
+            
+            posible_list = list(range(len(self.train_sketch)))
+            posible_list.remove(item)
+            
+            negative_item = posible_list[randint(0, len(posible_list)-1)]
+            negative_sample = '_'.join(self.train_sketch[negative_item].split('/')[-1].split('_')[:-1])
+            negative_path = os.path.join(self.root_dir, 'photo', negative_sample + '.png')
+            
+            vector_x = self.coordinate[sketch_path]
+            sketch_img = rasterize_sketch(vector_x)
