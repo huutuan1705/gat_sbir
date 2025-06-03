@@ -75,3 +75,18 @@ class MIGG(nn.Module):
                                                                shape (N_labels, gcn_output_dim).
                                                                Useful for L_GCN loss component.
         """
+        visual_features = self.linear(self.attention(self.sample_embedding_network(images)))
+        all_semantic_label_embeddings = self.label_embedder(all_label_indices)
+        gcn_processed_label_features = self.gcn_module(
+            all_semantic_label_embeddings,
+            label_adj_matrix
+        ) # (N_labels, D_gcn_out)
+        
+        search_space_embeddings = self.image_gat_fusion(
+            visual_features,
+            gcn_processed_label_features,
+            label_adj_matrix
+        ) # (B, D_search_space)
+        prediction_scores = self.classifier_head(search_space_embeddings) # (B, Num_Classes)
+        return search_space_embeddings, prediction_scores, gcn_processed_label_features
+        
