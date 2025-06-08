@@ -1,0 +1,80 @@
+# Base Configuration for GLGM Image Retrieval Project
+
+project_name: "MIGG_Image_Retrieval"
+description: "Base configuration for MIGG."
+
+# Environment Settings
+seed: 42
+device: "cuda" # "cuda" or "cpu"
+num_workers: 4 # Number of workers for DataLoader
+
+# Dataset Settings
+dataset_root: "./data/" # Base path for all datasets
+image_size: [224, 224] # Default image size for models like ResNet (CIFAR-10 is 32x32, paper doesn't specify for MLIC-Edu input to ResNet)
+                       # The paper mentions CIFAR-10 is 32x32 [cite: 138]
+
+# Model (GLGM) Settings
+model_name: "MIGG"
+backbone:
+  name: "ResNet101" # Pre-trained ResNet101 is used as the backbone [cite: 153]
+  pretrained: true
+  output_features: 2048 # Typical output features for ResNet101 before FC layer
+
+gcn:
+  num_layers: 2 # A two-layer GCN is used [cite: 155]
+  input_dim: 300 # Example: Assuming GloVe 300d embeddings for labels
+  hidden_dim: 1024 # Example intermediate dimension
+  output_dim: 2048 # To match visual feature dimensions for GAT fusion
+
+gat:
+  input_dim_visual: 2048 # From CNN backbone (global/local)
+  input_dim_label: 2048  # From GCN output
+  num_heads: 8           # Example number of attention heads
+  output_dim: 2048       # Final fused feature dimension
+  dropout: 0.1
+  alpha: 0.2             # LeakyReLU alpha for GAT
+
+label_embedding:
+  source: "glove" # Pre-trained GloVe model is used for semantic embeddings [cite: 113]
+  embedding_dim: 300 # Common GloVe dimension
+  max_words_per_label: 5 # If labels can be multi-word
+
+# Training Settings
+optimizer:
+  name: "Adam" # Common optimizer, paper doesn't specify
+  lr: 0.0001   # Learning rate (needs tuning)
+  weight_decay: 0.00001
+
+scheduler:
+  name: "StepLR" # Example: ReduceLROnPlateau or CosineAnnealingLR are also common
+  step_size: 20
+  gamma: 0.1
+
+batch_size: 32     # Needs tuning based on dataset and GPU memory
+num_epochs: 100    # Needs tuning
+
+loss_weights:
+  cross_entropy: 1.0
+  gcn: 1.0 # The paper mentions L_GCN [cite: 133]
+  gat: 1.0 # The paper mentions L_GAT [cite: 133]
+
+# Evaluation Settings
+eval_batch_size: 64
+metrics: ["AP"] # Average Precision is a key metric [cite: 147, 167]
+ap_threshold: 0.5 # Example threshold for AP calculation if needed (AP is usually calculated over all thresholds) [cite: 149]
+
+# Retrieval Settings (FAISS)
+faiss:
+  index_type: "IndexFlatL2" # Example: IndexFlatIP for dot product, or more complex like IndexIVFFlat
+  dimension: 2048 # Should match the GAT output_dim / common search space dimension
+  top_k: 5 # For retrieving top-k similar images, fig 4 shows Top-5 results [cite: 182]
+
+# Checkpoint Settings
+checkpoint_dir: "./trained_models/"
+save_every_n_epochs: 10 # How often to save model checkpoints
+best_metric_to_monitor: "AP" # Which metric determines the "best" model
+
+# Logging (if using a logger like WandB or TensorBoard)
+use_logger: false
+logger_name: "tensorboard" # "wandb" or "tensorboard"
+log_every_n_steps: 100

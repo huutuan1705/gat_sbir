@@ -96,4 +96,16 @@ class MIGG(nn.Module):
         ) # (B, D_search_space)
         prediction_scores = self.classifier_head(search_space_embeddings) # (B, Num_Classes)
         return search_space_embeddings, prediction_scores, gcn_processed_label_features, positive_feature, negative_feature, sketch_feature
+    
+    def test_forward(self, batch):
+        sketch_feature = self.sketch_embedding_network(batch['sketch_img'].to(device))
+        positive_feature = self.sample_embedding_network(batch['positive_img'].to(device))
+        
+        positive_feature = self.attention(positive_feature)
+        sketch_feature = self.sketch_attention(sketch_feature)
+        
+        positive_feature = self.linear(positive_feature)
+        sketch_feature = self.sketch_linear(sketch_feature)
+            
+        return sketch_feature, positive_feature
         
