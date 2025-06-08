@@ -54,7 +54,7 @@ class MIGG(nn.Module):
         search_space_embedding_dim = self.config['gat']['final_embedding_dim']
         self.classifier_head = nn.Linear(search_space_embedding_dim, num_classes)
         
-    def forward(self, images: torch.Tensor,
+    def forward(self, batch,
                 all_label_indices: torch.Tensor, # e.g., torch.arange(self.num_classes)
                 label_adj_matrix: torch.Tensor   # Adjacency matrix for the label graph
                ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
@@ -75,7 +75,14 @@ class MIGG(nn.Module):
                                                                shape (N_labels, gcn_output_dim).
                                                                Useful for L_GCN loss component.
         """
-        visual_features = self.linear(self.attention(self.sample_embedding_network(images)))
+        sketch_img = batch['sketch_img'].to(device)
+        positive_img = batch['positive_img'].to(device)
+        negative_img = batch['negative_img'].to(device)
+        
+        positive_feature = self.linear(self.attention(self.sample_embedding_network(positive_img)))
+        negative_feature = self.linear(self.attention(self.sample_embedding_network(negative_img)))
+        sketch_feature = self.sketch_linear(self.sketch_attention(self.sketch_embedding_network(sketch_img)))
+        
         all_semantic_label_embeddings = self.label_embedder(all_label_indices)
         gcn_processed_label_features = self.gcn_module(
             all_semantic_label_embeddings,
@@ -83,10 +90,10 @@ class MIGG(nn.Module):
         ) # (N_labels, D_gcn_out)
         
         search_space_embeddings = self.image_gat_fusion(
-            visual_features,
+            positive_feature,
             gcn_processed_label_features,
             label_adj_matrix
         ) # (B, D_search_space)
         prediction_scores = self.classifier_head(search_space_embeddings) # (B, Num_Classes)
-        return search_space_embeddings, prediction_scores, gcn_processed_label_features
+        return search_space_embeddings, prediction_scores, gcn_processed_label_features, positive_feature, negative_feature, sketch_feature
         
