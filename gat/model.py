@@ -75,13 +75,13 @@ class MIGG(nn.Module):
                                                                shape (N_labels, gcn_output_dim).
                                                                Useful for L_GCN loss component.
         """
-        sketch_img = batch['sketch_img'].to(device)
-        positive_img = batch['positive_img'].to(device)
-        negative_img = batch['negative_img'].to(device)
+        sketch_img = batch['sketch_images'].to(device)
+        positive_img = batch['positive_image'].to(device)
+        negative_img = batch['negative_image'].to(device)
         
         positive_feature = self.linear(self.attention(self.sample_embedding_network(positive_img)))
         negative_feature = self.linear(self.attention(self.sample_embedding_network(negative_img)))
-        sketch_feature = self.sketch_linear(self.sketch_attention(self.sketch_embedding_network(sketch_img)))
+        sketch_features = self.sketch_linear(self.sketch_attention(self.sketch_embedding_network(sketch_img)))
         
         all_semantic_label_embeddings = self.label_embedder(all_label_indices)
         gcn_processed_label_features = self.gcn_module(
@@ -95,17 +95,5 @@ class MIGG(nn.Module):
             label_adj_matrix
         ) # (B, D_search_space)
         prediction_scores = self.classifier_head(search_space_embeddings) # (B, Num_Classes)
-        return search_space_embeddings, prediction_scores, gcn_processed_label_features, positive_feature, negative_feature, sketch_feature
-    
-    def test_forward(self, batch):
-        sketch_feature = self.sketch_embedding_network(batch['sketch_img'].to(device))
-        positive_feature = self.sample_embedding_network(batch['positive_img'].to(device))
-        
-        positive_feature = self.attention(positive_feature)
-        sketch_feature = self.sketch_attention(sketch_feature)
-        
-        positive_feature = self.linear(positive_feature)
-        sketch_feature = self.sketch_linear(sketch_feature)
-            
-        return sketch_feature, positive_feature
+        return search_space_embeddings, prediction_scores, gcn_processed_label_features, positive_feature, negative_feature, sketch_features
         
