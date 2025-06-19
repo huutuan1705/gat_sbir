@@ -53,6 +53,7 @@ class MIGG(nn.Module):
         
         search_space_embedding_dim = self.config['gat']['final_embedding_dim']
         self.classifier_head = nn.Linear(search_space_embedding_dim, num_classes)
+        self.decoder = nn.Linear(300, 64)
         
     def forward(self, batch,
                 all_label_indices: torch.Tensor, # e.g., torch.arange(self.num_classes)
@@ -95,5 +96,6 @@ class MIGG(nn.Module):
             label_adj_matrix
         ) # (B, D_search_space)
         prediction_scores = self.classifier_head(search_space_embeddings) # (B, Num_Classes)
-        return search_space_embeddings, prediction_scores, gcn_processed_label_features, positive_feature, negative_feature, sketch_features
+        decode_label_feature = self.decoder(gcn_processed_label_features)
+        return search_space_embeddings, prediction_scores, decode_label_feature, positive_feature, negative_feature, sketch_features
         

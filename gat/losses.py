@@ -32,15 +32,13 @@ def compute_migg_loss(
     individual_losses['triplet'] = loss_triplet.item()
     
     # L_Semantic
-    decoder = nn.Linear(300, 64)
-    label_features = decoder(gcn_processed_label_features)
     loss_sem = 0
     num_labels = true_labels_multihot.sum(dim=1).clamp(min=1)  # tránh chia cho 0
 
-    for i in range(label_features.size(0)):  # với mỗi nhãn
+    for i in range(gcn_processed_label_features.size(0)):  # với mỗi nhãn
         mask = true_labels_multihot[:, i] > 0
         if mask.sum() > 0:
-            sem = label_features[i].unsqueeze(0)  # (1, 64)
+            sem = gcn_processed_label_features[i].unsqueeze(0)  # (1, 64)
             sem = sem.expand(mask.sum(), -1)      # match shape
             loss_sem += cosine_loss(sketch_feature[mask], sem)
             loss_sem += cosine_loss(positive_feature[mask], sem)
