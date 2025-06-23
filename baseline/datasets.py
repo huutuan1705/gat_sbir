@@ -84,10 +84,8 @@ class FGSBIR_Dataset(Dataset):
             posible_list.remove(item)
             
             
-            sample = {
-                "positive_image": positive_image,
-                "negative_image": negative_image,
-                "sketch_images": sketch_images,
-            }
+            sample = {'sketch_img': sketch_images, 'sketch_path': sketch_path,
+                      'positive_img': positive_image, 'positive_path': positive_sample,
+                      } 
             
         return sample
