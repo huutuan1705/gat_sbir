@@ -84,7 +84,7 @@ class FGSBIR_Dataset(Dataset):
             posible_list.remove(item)
             
             
-            sample = {'sketch_img': sketch_images, 'sketch_path': sketch_path,
+            sample = {'sketch_imgs': sketch_images, 'sketch_path': sketch_path,
                       'positive_img': positive_image, 'positive_path': positive_sample,
                       } 
             
