@@ -9,6 +9,7 @@ class SelfAttention(nn.Module):
         self.norm = nn.LayerNorm(2048)
         self.mha = nn.MultiheadAttention(2048, num_heads=args.num_heads, batch_first=True)
         # self.mha = nn.MultiheadAttention(2048, num_heads=8, batch_first=True)
+        self.dropout = nn.Dropout(p=0.2)
         
     def forward(self, x):
         identify = x
@@ -16,6 +17,7 @@ class SelfAttention(nn.Module):
         x_att = x.reshape(bs, c, h*w).transpose(1, 2)
         x_att = self.norm(x_att)
         att_out, _  = self.mha(x_att, x_att, x_att)
+        att_out = self.dropout(att_out)
         att_out = att_out.transpose(1, 2).reshape(bs, c, h, w)
         
         output = identify * att_out + identify
@@ -27,6 +29,8 @@ class Linear_global(nn.Module):
     def __init__(self, feature_num):
         super(Linear_global, self).__init__()
         self.head_layer = nn.Linear(2048, feature_num)
-    
+        self.dropout = nn.Dropout(p=0.2)
+
     def forward(self, x):
+        x = self.dropout(x)
         return F.normalize(self.head_layer(x))
