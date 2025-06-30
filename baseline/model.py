@@ -22,9 +22,6 @@ class Basline(nn.Module):
         def init_weights(m):
             if type(m) == nn.Linear or type(m) == nn.Conv2d or type(m) == nn.Parameter:
                 nn.init.kaiming_normal_(m.weight)
-            if type(m) == nn.MultiheadAttention:
-                nn.init.xavier_uniform_(m.in_proj_weight)
-                nn.init.xavier_uniform_(m.out_proj.weight)
                 
         if self.args.use_kaiming_init:
             self.attention.apply(init_weights)
