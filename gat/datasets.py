@@ -60,7 +60,7 @@ class MIGG_Dataset(Dataset):
             
             sketch_path = self.train_sketch[item]
             vector_x = self.coordinate[sketch_path]
-            list_sketch_imgs = rasterize_sketch(vector_x)
+            sketch_img = rasterize_sketch(vector_x)
             
             sketch_img = Image.fromarray(sketch_img).convert("RGB")
             return {
