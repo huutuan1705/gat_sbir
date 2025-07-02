@@ -12,11 +12,11 @@ from gat.utils import get_label_adjacency_matrix
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-def get_dataloader(args):
-    dataset_train = MIGG_Dataset(args, mode='train')
+def get_dataloader(args, num_classes):
+    dataset_train = MIGG_Dataset(args, mode='train', num_classes=num_classes)
     dataloader_train = data.DataLoader(dataset_train, batch_size=args.batch_size, shuffle=True, num_workers=int(args.threads))
     
-    dataset_test = MIGG_Dataset(args, mode='test')
+    dataset_test = MIGG_Dataset(args, mode='test', num_classes=num_classes)
     dataloader_test = data.DataLoader(dataset_test, batch_size=args.test_batch_size, shuffle=False, num_workers=int(args.threads))
     
     return dataloader_train, dataloader_test
@@ -128,13 +128,14 @@ def train_one_epoch(model, train_loader, optimizer, all_label_indices, label_adj
     return avg_loss 
 
 def train_model(model, args):
-    dataloader_train, dataloader_test = get_dataloader(args)
-    optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=0.01)
     if args.dataset_name == "ChairV2":
         num_classes = 19
     else:
         num_classes = 15
         
+    dataloader_train, dataloader_test = get_dataloader(args, num_classes=num_classes)
+    optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=0.01)
+    
     all_label_indices = torch.arange(num_classes).to(device)
     label_adj_matrix = get_label_adjacency_matrix(
         dataloader_train, 
