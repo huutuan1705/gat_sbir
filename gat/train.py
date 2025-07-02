@@ -141,7 +141,7 @@ def train_model(model, args):
         dataloader_train, 
         num_classes, 
         device,
-        threshold_type=args.adj_threshold_type,
+        threshold_type="dynamic",
         cooccurrence_threshold=0.01
     ).to(device)
     
