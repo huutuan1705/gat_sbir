@@ -18,6 +18,7 @@ class MIGG_Dataset(Dataset):
         self.mode = mode
         
         coordinate_path = os.path.join(args.root_dir, args.dataset_name, args.dataset_name + '_Coordinate')
+        annotations_path = os.path.join(args.root_dir, args.dataset_name, args.dataset_name + '_labels.csv')
         self.root_dir = os.path.join(args.root_dir, args.dataset_name)
         with open(coordinate_path, 'rb') as f:
             self.coordinate = pickle.load(f)
@@ -27,7 +28,7 @@ class MIGG_Dataset(Dataset):
         
         self.train_transform = get_transform('train')
         self.test_transform = get_transform('test')
-        self.img_labels_df = pd.read_csv(args.annotations_file)
+        self.img_labels_df = pd.read_csv(annotations_path)
         self.num_classes = num_classes
                 
     def __len__(self):
