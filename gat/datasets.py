@@ -92,8 +92,10 @@ class MIGG_Dataset(Dataset):
             negative_image = self.test_transform(negative_image)
             
             return {
-                "positive_image": positive_image,
-                "negative_image": negative_image,
-                "sketch_images": sketch_images,
+                "positive_img": positive_image,
+                "positive_path": positive_sample,
+                "negative_img": negative_image,
+                "sketch_imgs": sketch_images,
+                "sketch_path": sketch_path,
                 "labels": labels
             }
