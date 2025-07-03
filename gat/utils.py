@@ -91,46 +91,45 @@ def read_labels(csv_path):
 def get_model_config(glove_dim=300, csv_path=''):
     label_names_list = read_labels(csv_path)
     return {
-        'model': {
-            'label_embeddings': {
-                'embedding_dim': glove_dim,
-                'glove_file_path': '/kaggle/input/glove/pytorch/default/1/glove.6B.300d.txt', # Placeholder
-                'label_names': label_names_list # e.g. ['cat', 'dog', 'using_phone', ...]
-            },
-            'gcn': {
-                'hidden_dim': 512,
-                'output_dim': 1024, # GCN output label feature dim
-                'dropout': 0.1,
-                'num_layers': 2
-            },
-            'global_branch': {
-                'backbone_name': 'resnet101',
-                'pretrained': True,
-                'cnn_output_features_dim': 2048 # Native ResNet101 output
-            },
-            'local_branch': { # Simplified: uses same backbone as global
-                'backbone_name': 'resnet101',
-                'pretrained': True,
-                'cnn_output_features_dim': 2048
-            },
-            'visual_combiner': { # This key was used in GLGM __init__ but not used if GAT takes global/local separately
-                'projection_dim': 1024, # Example, if global+local were combined then projected before GAT
-                'dropout': 0.1
-            },
-            'gat': { # For ImageContextualizedLabelGAT
-                # visual_feature_dim is taken from global_branch.cnn_output_features_dim by GAT if only global is used for projection
-                # gcn_label_feature_dim is taken from gcn.output_dim by GAT
-                'hidden_dim_Noeudefined_internally': 0, # Placeholder, GAT calculates its true input dim
-                'out_per_head_dim': 256,
-                'num_heads': 4,
-                'final_embedding_dim': 512, # Dimension of common search space
-                'num_layers': 2, # Number of GAT layers stacked in ImageContextualizedLabelGAT
-                'dropout': 0.1,
-                'alpha_gat': 0.2
-            },
-            'classifier': {
-                # Classifier input dim is gat.final_embedding_dim
-                # Classifier output dim is num_classes
-            }
+        'label_embeddings': {
+            'embedding_dim': glove_dim,
+            'glove_file_path': '/kaggle/input/glove/pytorch/default/1/glove.6B.300d.txt', # Placeholder
+            'label_names': label_names_list # e.g. ['cat', 'dog', 'using_phone', ...]
+        },
+        'gcn': {
+            'hidden_dim': 512,
+            'output_dim': 1024, # GCN output label feature dim
+            'dropout': 0.1,
+            'num_layers': 2
+        },
+        'global_branch': {
+            'backbone_name': 'resnet101',
+            'pretrained': True,
+            'cnn_output_features_dim': 2048 # Native ResNet101 output
+        },
+        'local_branch': { # Simplified: uses same backbone as global
+            'backbone_name': 'resnet101',
+            'pretrained': True,
+            'cnn_output_features_dim': 2048
+        },
+        'visual_combiner': { # This key was used in GLGM __init__ but not used if GAT takes global/local separately
+            'projection_dim': 1024, # Example, if global+local were combined then projected before GAT
+            'dropout': 0.1
+        },
+        'gat': { # For ImageContextualizedLabelGAT
+            # visual_feature_dim is taken from global_branch.cnn_output_features_dim by GAT if only global is used for projection
+            # gcn_label_feature_dim is taken from gcn.output_dim by GAT
+            'hidden_dim_Noeudefined_internally': 0, # Placeholder, GAT calculates its true input dim
+            'out_per_head_dim': 256,
+            'num_heads': 4,
+            'final_embedding_dim': 512, # Dimension of common search space
+            'num_layers': 2, # Number of GAT layers stacked in ImageContextualizedLabelGAT
+            'dropout': 0.1,
+            'alpha_gat': 0.2
+        },
+        'classifier': {
+            # Classifier input dim is gat.final_embedding_dim
+            # Classifier output dim is num_classes
         }
     }
+    
