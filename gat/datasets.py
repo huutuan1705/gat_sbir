@@ -38,15 +38,15 @@ class MIGG_Dataset(Dataset):
         return len(self.test_sketch)
         
         
-    def __getitem__(self, item):
-        print(item)
-        labels = self.img_labels_df.iloc[item, -self.num_classes:].values
-        labels = torch.tensor(labels.astype('float32'))
-        
+    def __getitem__(self, item):        
         if self.mode == 'train':
             positive_sample = '_'.join(self.train_sketch[item].split('/')[-1].split('_')[:-1])
             positive_path = os.path.join(self.root_dir, 'photo', positive_sample + '.png')
             
+            image_name = positive_sample + '.png'
+            labels = self.img_labels_df[self.img_labels_df["image_name"] == image_name].iloc[0, -self.num_classes:].values
+            labels = torch.tensor(labels.astype('float32'))
+        
             posible_list = list(range(len(self.train_sketch)))
             posible_list.remove(item)
             
@@ -83,6 +83,10 @@ class MIGG_Dataset(Dataset):
             positive_sample = '_'.join(self.test_sketch[item].split('/')[-1].split('_')[:-1])
             positive_path = os.path.join(self.root_dir, 'photo', positive_sample + '.png')
             positive_image = self.test_transform(Image.open(positive_path).convert("RGB"))
+            
+            image_name = positive_sample + '.png'
+            labels = self.img_labels_df[self.img_labels_df["image_name"] == image_name].iloc[0, -self.num_classes:].values
+            labels = torch.tensor(labels.astype('float32'))
             
             posible_list = list(range(len(self.test_sketch)))
             posible_list.remove(item)
