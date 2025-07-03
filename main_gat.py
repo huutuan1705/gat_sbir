@@ -30,4 +30,4 @@ if __name__ == "__main__":
     config = get_model_config()
     model = MIGG(num_classes=num_classes, config=config, args=args)
     
-    train_model(model, args)
+    train_model(model, args, num_classes=num_classes)
