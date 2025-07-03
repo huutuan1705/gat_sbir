@@ -1,3 +1,4 @@
+import os
 import argparse
 from gat.model import MIGG
 from gat.train import train_model
@@ -27,7 +28,9 @@ if __name__ == "__main__":
         num_classes = 19
     else:
         num_classes = 15
-    config = get_model_config()
+        
+    csv_files = os.path.join(args.root_dir, args.dataset_name, args.dataset_name + '_labels.csv')
+    config = get_model_config(csv_files)
     model = MIGG(num_classes=num_classes, config=config, args=args)
     
-    train_model(model, args)
+    train_model(model, args, num_classes=num_classes)
