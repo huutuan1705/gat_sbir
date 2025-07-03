@@ -64,6 +64,8 @@ class MIGG_Dataset(Dataset):
             sketch_img = rasterize_sketch(vector_x)
             
             sketch_img = Image.fromarray(sketch_img).convert("RGB")
+            sketch_img = self.train_transform(sketch_img)
+            
             return {
                 "positive_image": positive_image,
                 "negative_image": negative_image,
