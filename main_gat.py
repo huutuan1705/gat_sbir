@@ -1,6 +1,7 @@
 import argparse
-from gat.model import FGSBIR_GAT
+from gat.model import MIGG
 from gat.train import train_model
+from gat.utils import get_model_config
 
 if __name__ == "__main__":
     parsers = argparse.ArgumentParser(description='GAT Fine-Grained SBIR model')
@@ -21,9 +22,12 @@ if __name__ == "__main__":
     parsers.add_argument('--epochs', type=int, default=300)
     
     args = parsers.parse_args()
-    model = FGSBIR_GAT(visual_feature_dim=1024,
-                       gat_out_per_head_dim=256,
-                       gcn_label_feature_dim=1024,
-                       n_gat_heads=4,
-                       final_embedding_dim=512)
+    
+    if args.dataset_name == "ChairV2":
+        num_classes = 19
+    else:
+        num_classes = 15
+    config = get_model_config()
+    model = MIGG(num_classes=num_classes, config=config, args=args)
+    
     train_model(model, args)

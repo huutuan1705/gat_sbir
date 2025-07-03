@@ -127,12 +127,7 @@ def train_one_epoch(model, train_loader, optimizer, all_label_indices, label_adj
     avg_loss = total_loss_epoch / len(train_loader)
     return avg_loss 
 
-def train_model(model, args):
-    if args.dataset_name == "ChairV2":
-        num_classes = 19
-    else:
-        num_classes = 15
-        
+def train_model(model, args, num_classes):
     dataloader_train, dataloader_test = get_dataloader(args, num_classes=num_classes)
     optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=0.01)
     

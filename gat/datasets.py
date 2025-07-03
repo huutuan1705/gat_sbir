@@ -66,7 +66,7 @@ class MIGG_Dataset(Dataset):
             return {
                 "positive_image": positive_image,
                 "negative_image": negative_image,
-                "sketch_images": sketch_images,
+                "sketch_images": sketch_img,
                 "labels": labels
             }
         
