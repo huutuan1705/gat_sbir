@@ -30,7 +30,7 @@ class MIGG(nn.Module):
             embedding_dim=self.config['label_embeddings']['embedding_dim'],
             glove_file_path=self.config['label_embeddings'].get('glove_file_path'), # Optional
             label_names=self.config['label_embeddings'].get('label_names')         # Optional
-        )
+        ).to(device)
         
         self.gcn_module = GCN(
             nfeat=self.config['label_embeddings']['embedding_dim'], # Input from label embedder
@@ -38,7 +38,7 @@ class MIGG(nn.Module):
             nclass=self.config['gcn']['output_dim'], # Output dim of GCN-processed label features
             dropout=self.config['gcn']['dropout'],
             num_layers=self.config['gcn']['num_layers']
-        )
+        ).to(device)
         
         self.image_gat_fusion = FGSBIR_GAT(
             visual_feature_dim=self.config['visual_combiner']['projection_dim'],
@@ -49,11 +49,11 @@ class MIGG(nn.Module):
             num_gat_layers=self.config['gat']['num_layers'],
             dropout=self.config['gat']['dropout'],
             alpha_gat=self.config['gat']['alpha_gat']
-        )
+        ).to(device)
         
         search_space_embedding_dim = self.config['gat']['final_embedding_dim']
-        self.classifier_head = nn.Linear(search_space_embedding_dim, num_classes)
-        self.decoder = nn.Linear(300, 64)
+        self.classifier_head = nn.Linear(search_space_embedding_dim, num_classes).to(device)
+        self.decoder = nn.Linear(300, 64).to(device)
         
     def forward(self, batch,
                 all_label_indices: torch.Tensor, # e.g., torch.arange(self.num_classes)
