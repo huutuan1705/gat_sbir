@@ -27,6 +27,7 @@ def get_label_adjacency_matrix(train_loader: DataLoader, num_classes: int, devic
 
     for batch_idx, data_batch in enumerate(train_loader):
         *_, multi_hot_labels = data_batch 
+        print(multi_hot_labels)
         multi_hot_labels = multi_hot_labels.cpu().numpy()
 
         # Efficiently compute co-occurrences for the batch
