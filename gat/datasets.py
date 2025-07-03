@@ -39,6 +39,7 @@ class MIGG_Dataset(Dataset):
         
         
     def __getitem__(self, item):
+        print(item)
         labels = self.img_labels_df.iloc[item, -self.num_classes:].values
         labels = torch.tensor(labels.astype('float32'))
         
