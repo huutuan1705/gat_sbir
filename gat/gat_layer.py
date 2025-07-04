@@ -86,7 +86,7 @@ class GraphAttentionLayer(nn.Module):
         # adj_matrix: (N, N). Needs to be broadcastable to (N, N, n_heads)
         adj_mask = adj_matrix.unsqueeze(-1) # (N, N, 1)
         
-        attention_scores = torch.where(adj_mask > 0, e_unnormalized, zero_vec)
+        attention_scores = torch.where(adj_mask.to_dense() > 0, e_unnormalized, zero_vec)
         attention_probs = F.softmax(attention_scores, dim=1) # Softmax over columns (j for fixed i)
         attention_probs = F.dropout(attention_probs, self.dropout_rate, training=self.training) # (N, N, n_heads)
 
