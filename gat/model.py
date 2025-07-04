@@ -54,7 +54,7 @@ class MIGG(nn.Module):
         
         search_space_embedding_dim = self.config['gat']['final_embedding_dim']
         self.classifier_head = nn.Linear(search_space_embedding_dim, num_classes).to(device)
-        self.decoder = nn.Linear(300, 64).to(device)
+        self.decoder = nn.Linear(1024, 64).to(device)
         
     def forward(self, batch,
                 all_label_indices: torch.Tensor, # e.g., torch.arange(self.num_classes)
