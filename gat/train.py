@@ -21,7 +21,7 @@ def get_dataloader(args, num_classes):
     
     return dataloader_train, dataloader_test
 
-def evaluate_model(model, dataloader_test, all_label_indices, label_adj_matrix):
+def evaluate_model(model, dataloader_test, all_label_indices=None, label_adj_matrix=None):
     with torch.no_grad():
         model.eval()
         sketch_array_tests = []
