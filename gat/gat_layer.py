@@ -71,14 +71,13 @@ class GraphAttentionLayer(nn.Module):
         # self.a: (n_heads, 2 * out_features) -> (n_heads, 2 * out_features, 1) for matmul
         # e_unnormalized: (N*N, n_heads, 1)
         
-        # print("h_concat shape: ", h_concat.shape) # [361, 4, 512]
-        # print("self.a shape: ", self.a.shape) # [4, 512]
+        print("h_concat shape: ", h_concat.shape) # [361, 4, 512]
+        print("self.a shape: ", self.a.shape) # [4, 512]
         
         e_unnormalized = torch.matmul(h_concat, self.a)
         e_unnormalized = self.leakyrelu(e_unnormalized) # (N*N, n_heads)
         
         print(e_unnormalized.shape)  # in ra shape thật sự
-        print(N, self.n_heads, N * N * self.n_heads)  # in ra số phần tử kỳ vọng
         e_unnormalized = e_unnormalized.view(N, N, self.n_heads) # (N, N, n_heads)
         
         # Masking: only attend to neighbors (as defined by adj_matrix)
