@@ -80,7 +80,7 @@ class MIGG(nn.Module):
         positive_img = batch['positive_image'].to(device)
         negative_img = batch['negative_image'].to(device)
         
-        positive_feature = self.linear(self.attention(self.sample_embedding_network(positive_img)))
+        positive_feature = self.attention(self.sample_embedding_network(positive_img))
         negative_feature = self.linear(self.attention(self.sample_embedding_network(negative_img)))
         sketch_features = self.sketch_linear(self.sketch_attention(self.sketch_embedding_network(sketch_img)))
         
@@ -97,5 +97,7 @@ class MIGG(nn.Module):
         ) # (B, D_search_space)
         prediction_scores = self.classifier_head(search_space_embeddings) # (B, Num_Classes)
         decode_label_feature = self.decoder(gcn_processed_label_features)
+        
+        positive_feature = self.linear(positive_feature)
         return search_space_embeddings, prediction_scores, decode_label_feature, positive_feature, negative_feature, sketch_features
         

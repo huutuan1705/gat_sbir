@@ -71,6 +71,7 @@ class FGSBIR_GAT(nn.Module):
             gat_processed_features = current_image_label_features
             for gat_layer in self.gat_layers:
                 gat_processed_features = gat_layer(gat_processed_features, label_adj_matrix)
+            # gat_processed_features: (N_labels, gat_output_dim_concatenated)
             
             # 4. Attention-based Pooling over label features for this image
             # This pools the N_labels features into a single feature vector for the image.
