@@ -140,6 +140,7 @@ def train_model(model, args, num_classes):
         cooccurrence_threshold=0.01
     ).to(device)
     
+    top1, top5, top10 = 0, 0, 0
     for i_epoch in range(args.epochs):
         print(f"Epoch: {i_epoch+1} / {args.epochs}")
         
