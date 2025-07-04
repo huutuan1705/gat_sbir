@@ -30,7 +30,7 @@ class GraphAttentionLayer(nn.Module):
 
         # Attention mechanism parameters 'a' for each head
         # a_k: (2 * out_features, 1) for each head k
-        self.a = nn.Parameter(torch.empty(size=(n_heads, 2 * out_features)))
+        self.a = nn.Parameter(torch.empty(size=(2 * out_features, n_heads)))
         nn.init.xavier_uniform_(self.a.data, gain=1.414)
 
         self.leakyrelu = nn.LeakyReLU(self.alpha)
@@ -70,8 +70,9 @@ class GraphAttentionLayer(nn.Module):
         # Apply attention parameters 'a'
         # self.a: (n_heads, 2 * out_features) -> (n_heads, 2 * out_features, 1) for matmul
         # e_unnormalized: (N*N, n_heads, 1)
-        print("h_concat shape: ", h_concat.shape)
-        print("self.a shape: ", self.a.shape)
+        
+        # print("h_concat shape: ", h_concat.shape) # [361, 4, 512]
+        # print("self.a shape: ", self.a.shape) # [4, 512]
         
         e_unnormalized = torch.matmul(h_concat, self.a.unsqueeze(-1))
         e_unnormalized = self.leakyrelu(e_unnormalized.squeeze(-1)) # (N*N, n_heads)
