@@ -19,6 +19,7 @@ class MIGG(nn.Module):
         
         self.sample_embedding_network = InceptionV3(args=args).to(device)
         self.attention = SelfAttention(args).to(device)
+        self.project = nn.Linear(2048, 1024).to(device)
         self.linear = Linear_global(feature_num=self.args.output_size).to(device)
         
         self.sketch_embedding_network = InceptionV3(args=args).to(device)
@@ -90,8 +91,9 @@ class MIGG(nn.Module):
             label_adj_matrix
         ) # (N_labels, D_gcn_out)
         
+        positive_feature_project = self.project(positive_feature)
         search_space_embeddings = self.image_gat_fusion(
-            positive_feature,
+            positive_feature_project,
             gcn_processed_label_features,
             label_adj_matrix
         ) # (B, D_search_space)
