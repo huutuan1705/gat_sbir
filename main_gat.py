@@ -1,5 +1,6 @@
 import os
 import argparse
+import torch
 import torch.nn as nn
 from gat.model import MIGG
 from gat.train import train_model
@@ -14,7 +15,8 @@ if __name__ == "__main__":
     parsers.add_argument('--dataset_name', type=str, default='ShoeV2')
     parsers.add_argument('--output_size', type=int, default=64)
     parsers.add_argument('--num_heads', type=int, default=8)
-    parsers.add_argument('--root_dir', type=str, default='./../')
+    parsers.add_argument('--root_dir', type=str, default='/kaggle/input/fg-sbir-dataset')
+    parsers.add_argument('--pretrained_dir', type=str, default='/kaggle/input/chairv2_pretrained/pytorch/default/1')
     
     parsers.add_argument('--use_kaiming_init', type=bool, default=True)
     
@@ -37,5 +39,16 @@ if __name__ == "__main__":
     csv_files = os.path.join(args.root_dir, args.dataset_name, args.dataset_name + '_labels.csv')
     config = get_model_config(csv_path=csv_files)
     model = MIGG(num_classes=num_classes, config=config, args=args)
-    model.apply(init_weights)
+    
+    backbones_state = torch.load(args.pretrained_dir + "/" + args.dataset_name + "_backbone.pth")
+    attention_state = torch.load(args.pretrained_dir + "/" + args.dataset_name + "_attention.pth")
+    linear_state = torch.load(args.pretrained_dir + "/" + args.dataset_name + "_linear.pth")
+    
+    model.sample_embedding_network.load_state_dict(backbones_state['sample_embedding_network'], strict=False)
+    model.attention.load_state_dict(attention_state['attention'], strict=False)
+    model.linear.load_state_dict(linear_state['linear'])
+    model.sketch_embedding_network.load_state_dict(backbones_state['sketch_embedding_network'], strict=False)
+    model.sketch_attention.load_state_dict(attention_state['sketch_attention'], strict=False)
+    model.sketch_linear.load_state_dict(linear_state['sketch_linear'])
+        
     train_model(model, args, num_classes=num_classes)

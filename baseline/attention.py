@@ -24,6 +24,10 @@ class SelfAttention(nn.Module):
         output = self.pool_method(output).view(-1, 2048)
         return F.normalize(output)
     
+    def fix_weights(self):
+        for x in self.parameters():
+            x.requires_grad = False
+    
     
 class Linear_global(nn.Module):
     def __init__(self, feature_num):
@@ -34,3 +38,7 @@ class Linear_global(nn.Module):
     def forward(self, x):
         x = self.dropout(x)
         return F.normalize(self.head_layer(x))
+    
+    def fix_weights(self):
+        for x in self.parameters():
+            x.requires_grad = False
