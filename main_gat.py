@@ -40,7 +40,7 @@ if __name__ == "__main__":
     config = get_model_config(csv_path=csv_files)
     model = MIGG(num_classes=num_classes, config=config, args=args)
     
-    backbones_state = torch.load(args.pretrained_dir + "/" + args.dataset_name + "_backbone.pth")
+    backbones_state = torch.load(args.pretrained_dir + "/" + args.dataset_name + "_bacbkbone.pth")
     attention_state = torch.load(args.pretrained_dir + "/" + args.dataset_name + "_attention.pth")
     linear_state = torch.load(args.pretrained_dir + "/" + args.dataset_name + "_linear.pth")
     
