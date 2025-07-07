@@ -60,7 +60,7 @@ def compute_migg_loss(
     # individual_losses['regularization'] = loss_reg.item() * loss_weights.get('regularization', 0.0)
     
     total_loss = (
-        loss_weights.get('cross_entropy', 0.3) * loss_ce +
+        # loss_weights.get('cross_entropy', 0.3) * loss_ce +
         loss_weights.get('triplet', 0.3) * loss_triplet +
         loss_weights.get('semantic', 0.3) * loss_sem
         # loss_weights.get('regularization', 0.1) * loss_reg # Add weighted regularization
