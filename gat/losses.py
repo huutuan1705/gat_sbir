@@ -22,9 +22,9 @@ def compute_migg_loss(
     individual_losses = {}
     
     # L_CrossEntropy
-    criterion_bce = nn.BCEWithLogitsLoss()
-    loss_ce = criterion_bce(prediction_scores, true_labels_multihot.float())
-    individual_losses['cross_entropy'] = loss_ce.item()
+    # criterion_bce = nn.BCEWithLogitsLoss()
+    # loss_ce = criterion_bce(prediction_scores, true_labels_multihot.float())
+    # individual_losses['cross_entropy'] = loss_ce.item()
     
     # L_TripletLoss
     criterion_triplet = nn.TripletMarginLoss(margin=0.3)
@@ -60,10 +60,10 @@ def compute_migg_loss(
     individual_losses['regularization'] = loss_reg.item() * loss_weights.get('regularization', 0.0)
     
     total_loss = (
-        loss_weights.get('cross_entropy', 0.3) * loss_ce +
+        # loss_weights.get('cross_entropy', 0.3) * loss_ce +
         loss_weights.get('triplet', 0.3) * loss_triplet +
         loss_weights.get('semantic', 0.3) * loss_sem +
-        loss_weights.get('regularization', 0.1) * loss_reg # Add weighted regularization
+        loss_weights.get('regularization', 0.3) * loss_reg # Add weighted regularization
     )
     individual_losses['total'] = total_loss.item()
     
