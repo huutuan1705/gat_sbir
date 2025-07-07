@@ -22,9 +22,9 @@ def compute_migg_loss(
     individual_losses = {}
     
     # L_CrossEntropy
-    # criterion_bce = nn.BCEWithLogitsLoss()
-    # loss_ce = criterion_bce(prediction_scores, true_labels_multihot.float())
-    # individual_losses['cross_entropy'] = loss_ce.item()
+    criterion_bce = nn.BCEWithLogitsLoss()
+    loss_ce = criterion_bce(prediction_scores, true_labels_multihot.float())
+    individual_losses['cross_entropy'] = loss_ce.item()
     
     # L_TripletLoss
     criterion_triplet = nn.TripletMarginLoss(margin=0.3)
@@ -50,20 +50,20 @@ def compute_migg_loss(
     # --- Optional: L_regularization (e.g., L2 weight decay on model parameters) ---
     # This is often handled by the optimizer's `weight_decay` parameter.
     # However, if explicit L2 reg is needed as a loss term:
-    loss_reg = torch.tensor(0.0, device=prediction_scores.device)
-    if model_parameters is not None and loss_weights.get('regularization', 0.1) > 0:
-        l2_reg = torch.tensor(0., device=prediction_scores.device)
-        for param in model_parameters:
-            if param.requires_grad: # Ensure we only penalize learnable parameters
-                l2_reg += torch.norm(param, p=2)
-        loss_reg = l2_reg
-    individual_losses['regularization'] = loss_reg.item() * loss_weights.get('regularization', 0.0)
+    # loss_reg = torch.tensor(0.0, device=prediction_scores.device)
+    # if model_parameters is not None and loss_weights.get('regularization', 0.1) > 0:
+    #     l2_reg = torch.tensor(0., device=prediction_scores.device)
+    #     for param in model_parameters:
+    #         if param.requires_grad: # Ensure we only penalize learnable parameters
+    #             l2_reg += torch.norm(param, p=2)
+    #     loss_reg = l2_reg
+    # individual_losses['regularization'] = loss_reg.item() * loss_weights.get('regularization', 0.0)
     
     total_loss = (
-        # loss_weights.get('cross_entropy', 0.3) * loss_ce +
+        loss_weights.get('cross_entropy', 0.3) * loss_ce +
         loss_weights.get('triplet', 0.3) * loss_triplet +
-        loss_weights.get('semantic', 0.3) * loss_sem +
-        loss_weights.get('regularization', 0.3) * loss_reg # Add weighted regularization
+        loss_weights.get('semantic', 0.3) * loss_sem
+        # loss_weights.get('regularization', 0.1) * loss_reg # Add weighted regularization
     )
     individual_losses['total'] = total_loss.item()
     
