@@ -26,6 +26,13 @@ class MIGG(nn.Module):
         self.sketch_attention = SelfAttention(args).to(device)
         self.sketch_linear = Linear_global(feature_num=self.args.output_size).to(device)
         
+        self.sample_embedding_network.fix_weights()
+        self.attention.fix_weights()
+        self.linear.fix_weights()
+        self.sketch_embedding_network.fix_weights()
+        self.sketch_attention.fix_weights()
+        self.sketch_linear.fix_weights()
+        
         self.label_embedder = LabelEmbeddings(
             num_classes=num_classes,
             embedding_dim=self.config['label_embeddings']['embedding_dim'],
