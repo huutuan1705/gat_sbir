@@ -129,7 +129,7 @@ def train_one_epoch(model, train_loader, optimizer, all_label_indices, label_adj
 
 def train_model(model, args, num_classes):
     dataloader_train, dataloader_test = get_dataloader(args, num_classes=num_classes)
-    optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=0.01)
+    optimizer = optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.01)
     
     all_label_indices = torch.arange(num_classes).to(device)
     label_adj_matrix = get_label_adjacency_matrix(

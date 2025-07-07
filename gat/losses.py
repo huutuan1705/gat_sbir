@@ -17,7 +17,7 @@ def compute_migg_loss(
 ) -> tuple[torch.Tensor, dict]:
     # Loss = L_CrossEntropy + L_TripletLoss + L_Semantic
     
-    loss_weights = {'cross_entropy': 0.3, 'triplet': 0.3, 'semantic': 0.3, 'regularization': 0.1}
+    loss_weights = {'cross_entropy': 0.3, 'triplet': 0.3, 'semantic': 0.3, 'regularization': 0.0}
 
     individual_losses = {}
     
